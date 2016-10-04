@@ -4,15 +4,20 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mcontext;
@@ -57,6 +62,13 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) view;
         }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("ImageAdapter", "clickListener called");
+                Toast.makeText(v.getContext(), "Clicked", LENGTH_SHORT).show();
+            }
+        });
         Picasso picasso = Picasso.with(mcontext);
         picasso.setIndicatorsEnabled(true);
         picasso.setLoggingEnabled(true);

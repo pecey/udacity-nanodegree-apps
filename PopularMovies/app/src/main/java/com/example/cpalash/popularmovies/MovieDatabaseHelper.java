@@ -69,8 +69,11 @@ public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String,Movie>
                 JSONObject result = results.getJSONObject(i);
                 String movieName = result.getString("original_title");
                 String posterUrl = result.getString("poster_path");
+                String synopsis = result.getString("overview");
+                String releaseDate = result.getString("release_date");
+                float rating = Float.parseFloat(result.getString("vote_average"));
                 posterUrl = "http://image.tmdb.org/t/p/w185/"+posterUrl;
-                Movie newMovie = new Movie(movieName, posterUrl);
+                Movie newMovie = new Movie(movieName, posterUrl, synopsis, rating, releaseDate);
                 movies.put(posterUrl, newMovie);
             }
         } catch (JSONException e) {

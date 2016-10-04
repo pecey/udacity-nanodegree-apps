@@ -14,7 +14,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public class ImageAdapter extends BaseAdapter {
@@ -69,10 +68,16 @@ public class ImageAdapter extends BaseAdapter {
                 Intent movieDetailIntent = new Intent(v.getContext(), MovieDetail.class);
                 String url = images.get(position);
                 Movie movieClicked = movies.get(url);
-                movieDetailIntent.putExtra("details", movieClicked.getName());
+                ArrayList<String> movieDetails = new ArrayList<>();
+                movieDetails.add(movieClicked.getName());
+                movieDetails.add(movieClicked.getPoster());
+                movieDetails.add(movieClicked.getSynopsis());
+                movieDetails.add(movieClicked.getReleaseDate());
+                movieDetails.add(String.valueOf(movieClicked.getRating()));
+                movieDetailIntent.putStringArrayListExtra("details", movieDetails);
                 movieDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(movieDetailIntent);
-//
+
             }
         });
         Picasso picasso = Picasso.with(mcontext);

@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class MovieDetail extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,11 +40,11 @@ public class MovieDetail extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
             Log.v("MovieDetailFragment", "Called");
             View rootView = inflater.inflate(R.layout.movie_detail, container, false);
-            Intent movieDetails = getActivity().getIntent();
-            String information = movieDetails.getStringExtra("details");
-            Log.v("MovieDetailFragment", information);
+            Intent movieDetailsIntent = getActivity().getIntent();
+            List<String> movieDetails = movieDetailsIntent.getStringArrayListExtra("details");
+            Log.v("MovieDetailFragment", movieDetails.toString());
             TextView details = (TextView) rootView.findViewById(R.id.movie_detail_movie_name);
-            details.setText(information);
+            details.setText(movieDetails.toString());
             return rootView;
         }
     }

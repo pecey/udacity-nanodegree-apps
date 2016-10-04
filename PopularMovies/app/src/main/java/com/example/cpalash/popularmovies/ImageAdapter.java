@@ -13,16 +13,20 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mcontext;
+    private Map<String, Movie> movies;
     private List<String> images;
 
     public ImageAdapter(Context mcontext) {
         this.mcontext = mcontext;
         try {
-            images = new MovieDatabaseHelper().execute().get();
+            movies = new MovieDatabaseHelper().execute().get();
+            images = new ArrayList<>(movies.keySet());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -63,7 +67,9 @@ public class ImageAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.v("ImageAdapter", "clickListener called");
                 Intent movieDetailIntent = new Intent(v.getContext(), MovieDetail.class);
-                movieDetailIntent.putExtra("details", String.valueOf(position));
+                String url = images.get(position);
+                Movie movieClicked = movies.get(url);
+                movieDetailIntent.putExtra("details", movieClicked.getName());
                 movieDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(movieDetailIntent);
 //

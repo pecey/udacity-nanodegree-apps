@@ -14,9 +14,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MovieDatabaseHelper extends AsyncTask<Void, Void, List<String>>{
+public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String,Movie>>{
 
     private String buildUrl() {
         final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
@@ -54,7 +56,8 @@ public class MovieDatabaseHelper extends AsyncTask<Void, Void, List<String>>{
 
 
     @Override
-    protected List<String> doInBackground(Void... params) {
+    protected Map<String, Movie> doInBackground(Void... params) {
+        Map<String, Movie>  movies = new HashMap<>();
         List<String> urls = new ArrayList<>();
 
         String url = buildUrl();
@@ -64,14 +67,17 @@ public class MovieDatabaseHelper extends AsyncTask<Void, Void, List<String>>{
             JSONArray results = json.getJSONArray("results");
             for (int i = 0; i < results.length(); i++) {
                 JSONObject result = results.getJSONObject(i);
+                String movieName = result.getString("original_title");
                 String posterUrl = result.getString("poster_path");
-                urls.add("http://image.tmdb.org/t/p/w185/"+posterUrl);
+                posterUrl = "http://image.tmdb.org/t/p/w185/"+posterUrl;
+                Movie newMovie = new Movie(movieName, posterUrl);
+                movies.put(posterUrl, newMovie);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return urls;
+        return movies;
     }
 
 }

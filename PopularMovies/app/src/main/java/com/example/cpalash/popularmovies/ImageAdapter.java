@@ -1,6 +1,7 @@
 package com.example.cpalash.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,10 @@ public class ImageAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Log.v("ImageAdapter", "clickListener called");
-                Toast.makeText(v.getContext(), "Clicked", LENGTH_SHORT).show();
+                Intent movieDetailIntent = new Intent(v.getContext(), MovieDetail.class);
+                movieDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                v.getContext().startActivity(movieDetailIntent);
+//
             }
         });
         Picasso picasso = Picasso.with(mcontext);

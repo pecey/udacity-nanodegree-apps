@@ -1,22 +1,18 @@
 package com.example.cpalash.sunshine;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -37,15 +33,25 @@ public class DetailActivity extends AppCompatActivity {
 
             }
 
-
             @Override
             public void onCreate(@Nullable Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
+                setHasOptionsMenu(true);
             }
 
             @Override
             public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-                inflater.inflate(R.menu.forecastfragment, menu);
+                inflater.inflate(R.menu.settings, menu);
+            }
+
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+                if(item.getItemId()==R.id.action_settings){
+                    Intent settingsIntent = new Intent(getContext(), SettingsActivity.class);
+                    startActivity(settingsIntent);
+                    return true;
+                }
+                return super.onOptionsItemSelected(item);
             }
 
             @Override

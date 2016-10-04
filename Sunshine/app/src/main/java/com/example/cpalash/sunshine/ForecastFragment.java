@@ -1,9 +1,12 @@
 package com.example.cpalash.sunshine;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,28 +52,57 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
+        inflater.inflate(R.menu.refresh, menu);
+        inflater.inflate(R.menu.settings, menu);
+        inflater.inflate(R.menu.map, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String urlString = getUrl("94043", 7);
+
         if (item.getItemId() == R.id.action_refresh) {
-            FetchWeatherTask weatherTask = new FetchWeatherTask();
-            weatherTask.execute(urlString);
+            updateWeatherDetails();
             return true;
         }
+        if(item.getItemId() == R.id.action_settings){
+            Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        if(item.getItemId() == R.id.action_map){
+            SharedPreferences userPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String location = userPreferences.getString(getString(R.string.location_key),getString(R.string.location_default_value));
+            Uri locationUrl = Uri.parse("geo:0,0?q="+location);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, locationUrl);
+            if(mapIntent.resolveActivity(getActivity().getPackageManager()) != null){
+                startActivity(mapIntent);
+                return true;
+            }
+            else{
+                Toast.makeText(getActivity(), "No suitable applications found", Toast.LENGTH_SHORT);
+            }
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateWeatherDetails() {
+        SharedPreferences userPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = userPreferences.getString(getString(R.string.location_key),getString(R.string.location_default_value));
+        FetchWeatherTask weatherTask = new FetchWeatherTask();
+        String urlString = getUrl(location, 7);
+        weatherTask.execute(urlString);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeatherDetails();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_main, container, false);
-        String urlString = getUrl("94043", 7);
         adapter = new ArrayAdapter<>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview);
-        FetchWeatherTask weatherTask = new FetchWeatherTask();
-        weatherTask.execute(urlString);
-
         final ListView forecastList = (ListView) fragmentView.findViewById(R.id.list_view_forecast);
         forecastList.setAdapter(adapter);
         forecastList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -5,20 +5,15 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mcontext;
@@ -51,7 +46,7 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(final int position, View view, ViewGroup parent) {
         ImageView imageView;
         if (view == null) {
             int height = parent.getHeight()/2;
@@ -68,6 +63,7 @@ public class ImageAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.v("ImageAdapter", "clickListener called");
                 Intent movieDetailIntent = new Intent(v.getContext(), MovieDetail.class);
+                movieDetailIntent.putExtra("details", String.valueOf(position));
                 movieDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(movieDetailIntent);
 //

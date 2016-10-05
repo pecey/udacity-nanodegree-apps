@@ -20,11 +20,22 @@ public class ImageAdapter extends BaseAdapter {
     private Context mcontext;
     private Map<String, Movie> movies;
     private List<String> images;
+    private DisplayBy category;
+
+    public void setCategory(DisplayBy category) {
+        this.category = category;
+        fetchData();
+    }
 
     public ImageAdapter(Context mcontext) {
+        this.category = DisplayBy.DISCOVER;
         this.mcontext = mcontext;
+        fetchData();
+    }
+
+    public void fetchData(){
         try {
-            movies = new MovieDatabaseHelper().execute().get();
+            movies = new MovieDatabaseHelper(category, this.mcontext).execute().get();
             images = new ArrayList<>(movies.keySet());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -52,7 +63,7 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(final int position, View view, ViewGroup parent) {
         ImageView imageView;
         if (view == null) {
-            int height = parent.getHeight()/2;
+            int height = parent.getHeight() / 2;
             imageView = new ImageView(mcontext);
             imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -67,13 +78,8 @@ public class ImageAdapter extends BaseAdapter {
                 Log.v("ImageAdapter", "clickListener called");
                 Intent movieDetailIntent = new Intent(v.getContext(), MovieDetail.class);
                 String url = images.get(position);
-                Movie movieClicked = movies.get(url);
-                ArrayList<String> movieDetails = new ArrayList<>();
-                movieDetails.add(movieClicked.getName());
-                movieDetails.add(movieClicked.getPoster());
-                movieDetails.add(movieClicked.getSynopsis());
-                movieDetails.add(movieClicked.getReleaseDate());
-                movieDetails.add(String.valueOf(movieClicked.getRating()));
+                Movie movie = movies.get(url);
+                ArrayList<String> movieDetails = getMovieDetailsList(movie);
                 movieDetailIntent.putStringArrayListExtra("details", movieDetails);
                 movieDetailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 v.getContext().startActivity(movieDetailIntent);
@@ -83,8 +89,18 @@ public class ImageAdapter extends BaseAdapter {
         Picasso picasso = Picasso.with(mcontext);
         picasso.setIndicatorsEnabled(true);
         picasso.setLoggingEnabled(true);
-        picasso.load(images.get(position)).fit().centerCrop().into(imageView);
+        picasso.load(images.get(position)).fit().centerCrop().placeholder(R.drawable.ic_action_name).into(imageView);
         Log.v("Image Adapter", images.get(position));
         return imageView;
+    }
+
+    private ArrayList<String> getMovieDetailsList(Movie movie) {
+        ArrayList<String> movieDetails = new ArrayList<>();
+        movieDetails.add(movie.getName());
+        movieDetails.add(movie.getPoster());
+        movieDetails.add(movie.getSynopsis());
+        movieDetails.add(movie.getReleaseDate());
+        movieDetails.add(String.valueOf(movie.getRating()));
+        return movieDetails;
     }
 }

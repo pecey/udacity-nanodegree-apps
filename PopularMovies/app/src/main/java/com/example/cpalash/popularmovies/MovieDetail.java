@@ -61,8 +61,11 @@ public class MovieDetail extends AppCompatActivity {
             TextView ratingTextView  = (TextView) rootView.findViewById(R.id.movie_detail_movie_rating);
             ratingTextView.setText(rating);
 
+            TextView synopsisTextView  = (TextView) rootView.findViewById(R.id.movie_detail_movie_synopsis);
+            synopsisTextView.setText(synopsis);
+
             ImageView posterImageView = (ImageView) rootView.findViewById(R.id.movie_detail_movie_poster);
-            Picasso.with(getContext()).load(poster).resize(150,150).into(posterImageView);
+            Picasso.with(getContext()).load(poster).fit().centerCrop().into(posterImageView);
 
             Log.v("Movie data", movieDetails.toString());
             return rootView;

@@ -1,55 +1,68 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/movie_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     android:weightSum="2">
+
+    <!-- Movie name -->
+    <TextView
+        android:id="@+id/movie_detail_movie_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:minHeight="@dimen/activity_horizontal_margin"
+        android:gravity="fill_horizontal"
+        android:textSize="24sp"
+        android:textStyle="normal|bold"
+        android:paddingBottom="5dp"
+        android:textAllCaps="true" />
 
     <!-- Poster and movie basic details -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
         android:weightSum="2">
 
         <!-- Placeholder for movie poster -->
+
         <ImageView
             android:id="@+id/movie_detail_movie_poster"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            />
+            android:minHeight="@dimen/activity_horizontal_margin" />
 
         <!-- Contains movie details -->
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:orientation="vertical"
-            android:weightSum="3">
-
-            <TextView
-                android:id="@+id/movie_detail_movie_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                />
+            android:weightSum="2">
 
             <TextView
                 android:id="@+id/movie_detail_movie_rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                />
+                android:minHeight="@dimen/activity_horizontal_margin"
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/movie_detail_movie_release"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                />
+                android:minHeight="@dimen/activity_horizontal_margin"
+                android:gravity="center" />
 
         </LinearLayout>
 
@@ -59,7 +72,16 @@
     <!-- Movie synopsis -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"></LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/movie_detail_movie_synopsis"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical" />
+    </LinearLayout>
 
 </LinearLayout>
+

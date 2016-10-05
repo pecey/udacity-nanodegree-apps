@@ -1,5 +1,8 @@
 package com.example.cpalash.popularmovies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -13,17 +16,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String,Movie>>{
+import static com.example.cpalash.popularmovies.DisplayBy.*;
+
+public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String, Movie>> {
+    private String API_KEY;
+    private DisplayBy category;
+
+    public MovieDatabaseHelper(DisplayBy category, Context context) {
+        API_KEY = ConfHelper.getConfigValue(context, "api_key");
+        this.category = category;
+    }
+
+    private String getBaseUrl() {
+        if (category == POPULAR) {
+            return "https://api.themoviedb.org/3/movie/popular";
+        }
+        if (category == RATED) {
+            return "https://api.themoviedb.org/3/movie/top_rated";
+        }
+        return "https://api.themoviedb.org/3/discover/movie";
+    }
 
     private String buildUrl() {
-        final String BASE_URL = "https://api.themoviedb.org/3/discover/movie";
-        final String API_KEY = "d44d016ef29d8eb9be3bdc7fd32193a2";
-        Uri baseUrl = Uri.parse(BASE_URL);
+        Uri baseUrl = Uri.parse(getBaseUrl());
         Uri url = baseUrl.buildUpon()
                 .appendQueryParameter("api_key", API_KEY)
                 .appendQueryParameter("language", "en-US")
@@ -57,8 +75,7 @@ public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String,Movie>
 
     @Override
     protected Map<String, Movie> doInBackground(Void... params) {
-        Map<String, Movie>  movies = new HashMap<>();
-        List<String> urls = new ArrayList<>();
+        Map<String, Movie> movies = new HashMap<>();
 
         String url = buildUrl();
         String jsonData = fetchData(url);
@@ -72,7 +89,7 @@ public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String,Movie>
                 String synopsis = result.getString("overview");
                 String releaseDate = result.getString("release_date");
                 float rating = Float.parseFloat(result.getString("vote_average"));
-                posterUrl = "http://image.tmdb.org/t/p/w185/"+posterUrl;
+                posterUrl = "http://image.tmdb.org/t/p/w185/" + posterUrl;
                 Movie newMovie = new Movie(movieName, posterUrl, synopsis, rating, releaseDate);
                 movies.put(posterUrl, newMovie);
             }
@@ -81,6 +98,12 @@ public class MovieDatabaseHelper extends AsyncTask<Void, Void, Map<String,Movie>
         }
 
         return movies;
+    }
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = manager.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
 }

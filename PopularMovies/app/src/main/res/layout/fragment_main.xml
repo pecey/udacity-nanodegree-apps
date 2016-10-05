@@ -9,6 +9,9 @@
         android:id="@+id/image_grid_view"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"/>
+
 
 </FrameLayout>
